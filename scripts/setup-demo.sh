@@ -93,6 +93,19 @@ echo "  Note: Dependabot is configured via .github/dependabot.yml and will creat
 echo ""
 echo "[5/7] Creating demo branches and PRs..."
 
+# Ensure we're on main
+git checkout main 2>/dev/null || true
+
+# Clean up any existing demo branches (safe to re-run)
+git branch -D feature/payment-discount 2>/dev/null || true
+git branch -D feature/add-new-dependency 2>/dev/null || true
+git push origin --delete feature/payment-discount 2>/dev/null || true
+git push origin --delete feature/add-new-dependency 2>/dev/null || true
+
+# Close any existing PRs for these branches
+gh pr close feature/payment-discount 2>/dev/null || true
+gh pr close feature/add-new-dependency 2>/dev/null || true
+
 # Branch: feature/payment-discount (for Block 3 - Code Review demo)
 echo "  Creating branch: feature/payment-discount..."
 git checkout -b feature/payment-discount
