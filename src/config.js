@@ -8,12 +8,10 @@ module.exports = {
   jwtSecret: 'super-secret-jwt-key-do-not-use',
   database: './data/qa-demo.db',
 
-  // AWS credentials — PLACEHOLDER for secret scanning demo
-  // Before the presentation, replace these with a real-looking AWS key
+  // GitHub PAT — PLACEHOLDER for secret scanning demo
+  // Before the presentation, create a temporary GitHub PAT and paste it here
   // to trigger a secret scanning alert (see presentation-guide.md Step 5.4)
-  aws: {
-    accessKeyId: 'REPLACE_WITH_AWS_KEY_BEFORE_DEMO',
-    secretAccessKey: 'REPLACE_WITH_AWS_SECRET_BEFORE_DEMO',
-    region: 'us-east-1'
+  github: {
+    token: 'REPLACE_WITH_GITHUB_PAT_BEFORE_DEMO'
   }
 };

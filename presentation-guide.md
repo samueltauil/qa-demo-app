@@ -347,40 +347,58 @@ src/routes/search.js
 
 ### Step 5.4 — Secret Scanning (4 min)
 
-> **Pre-demo prep:** Before the presentation, you need to plant a real-looking AWS key so secret scanning catches it. This must be done manually because GitHub's push protection blocks fake keys from being committed via scripts.
+> **Pre-demo prep:** Before the presentation, you need to plant a real GitHub token so secret scanning catches it. You'll create a temporary PAT, commit it, then revoke it after the demo.
 
-**① Plant the secret (do this BEFORE the demo, during setup):**
+**① Create and plant the secret (do this BEFORE the demo, during setup):**
 
-1. Open `src/config.js` in VS Code
-2. Replace the placeholder values with a realistic-looking AWS key:
+1. Go to **GitHub.com → Settings → Developer settings → Personal access tokens → Tokens (classic)**
+2. Click **"Generate new token (classic)"**
+3. Name it `demo-secret-scanning-test`, set expiration to **1 day**, select **no scopes** (zero permissions)
+4. Click **Generate token** and copy the `ghp_...` value
+5. Open `src/config.js` in VS Code and replace the placeholder:
    ```javascript
-   aws: {
-     accessKeyId: 'AKIA...',      // 20 chars starting with AKIA
-     secretAccessKey: '...',       // 40 char base64-like string
-     region: 'us-east-1'
+   github: {
+     token: 'ghp_xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx'  // paste your PAT here
    }
    ```
-3. Commit and push — GitHub will **block the push** with a push protection prompt
-4. On the push protection page, select **"It's used in tests"** and allow it
-5. Push again — it will succeed and create a secret scanning alert
-6. Wait ~2 minutes for the alert to appear under Security → Secret scanning
+6. Commit and push:
+   ```bash
+   git add src/config.js
+   git commit -m "add config"
+   git push
+   ```
+7. GitHub push protection will **block the push** — click the link in the error, select **"It's used in tests"**, and allow it
+8. Run `git push` again — it will succeed
+9. Wait ~1 minute for the secret scanning alert to appear
+10. GitHub will also **automatically revoke the PAT** once it detects it — you'll get an email notification
 
-> **Tip:** You can generate a realistic-looking (but fake) AWS key pair at https://docs.aws.amazon.com/IAM/latest/UserGuide/id_credentials_access-keys.html — just make sure the format is correct (AKIA + 16 alphanumeric chars for the access key, 40 chars for the secret).
+> **Note:** Since GitHub auto-revokes detected PATs, you don't need to manually delete it after the demo. But you can verify it was revoked under Settings → Developer settings → Personal access tokens.
 
 **② During the demo — show the alert:**
 
 **On GitHub.com → Security → Secret scanning alerts**
 
-> Show the alert for the AWS key. Click into it to show:
-> - The secret type (AWS Access Key)
+> Show the alert for the GitHub PAT. Click into it to show:
+> - The secret type (GitHub Personal Access Token)
 > - Where it was found (`src/config.js`)
 > - The commit that introduced it
-> - Remediation options (revoke, dismiss)
+> - That GitHub **automatically revoked** the token
+> - Remediation options
+
+**🗣️ Say:** *"GitHub didn't just find the secret — it automatically revoked it. The token is already invalidated. That's the difference between finding a problem and fixing it."*
 
 **③ (Optional) Demo push protection live:**
-> Create a new file with a fake secret, commit it, and push. Show the push being blocked in real-time.
+> This actually happens naturally in step ① above — the push gets blocked. If you want to show this live during the demo instead of during setup, save steps 6-8 for the live demo.
 
 **🗣️ Say:** *"How many of you have found credentials in config files during testing? Secret scanning catches these automatically — and push protection stops them from entering the repo at all."*
+
+**④ After the demo — clean up:**
+> The PAT is already auto-revoked. Just revert the config change:
+> ```bash
+> git checkout main -- src/config.js
+> git commit -m "revert demo secret"
+> git push
+> ```
 
 ---
 
