@@ -208,59 +208,64 @@ What does this test verify? Are there any gaps in the test coverage? What edge c
 
 ---
 
-# Block 3: Copilot — Code Review & Bug Analysis (8 min) 🖥️ DEMO
+# Block 3: Copilot — QA Code Review & Issue Tracking (8 min) 🖥️ DEMO
 
 ### Say This First:
-*"Alex's morning continues with PR reviews. A developer submitted a change to the payment processing logic — adding discount code support."*
+*"Alex's morning continues with PR reviews. On the project board, there's a QA task: 'Review PR — Discount code support for payments.' Let's see how a QA engineer uses Copilot to handle this end-to-end."*
 
 ---
 
-### Step 3.1 — Open the PR in VS Code (1 min)
+### Step 3.1 — Start from the QA Issue (1 min)
 
-**① In VS Code, open the GitHub Pull Requests panel (left sidebar) and check out the payment-discount PR.**
+**① On GitHub.com, open the project board and click the issue: "Review PR: Discount code support for payments"**
 
-> The PR title is "feat: Add discount code support to payment processing". Click on it to view the diff.
+> Show the issue body — it has a QA checklist (race conditions, zero-amount, expired codes) and a link to the PR.
 
-**🗣️ Say:** *"Alex sees a new PR assigned for review. Instead of manually reading every line, let's use a custom Copilot agent built specifically for QA reviews."*
+**🗣️ Say:** *"This is Alex's task — a structured QA review checklist created when the PR was opened. Let's use a custom Copilot agent to do the review and update this issue automatically."*
 
 ---
 
-### Step 3.2 — Run the PR Reviewer Agent (5 min)
+### Step 3.2 — Run the QA PR Reviewer Agent (5 min)
 
-**① In Copilot Chat, select the `pr-reviewer` agent from the agent picker (dropdown at the top).**
+**① In VS Code / Codespaces, open Copilot Chat and select the `pr-reviewer` agent from the agent picker.**
 
-> This is a custom agent defined in `.github/agents/pr-reviewer.agent.md` — it knows how to read PR diffs, find bugs, and post review comments.
+> This is a custom agent defined in `.github/agents/pr-reviewer.agent.md` — it reviews PRs from a QA perspective and updates the linked issue.
 
 **② Type this single prompt:**
 ```
-Review this PR for bugs, race conditions, edge cases, and security issues
+Review the payment discount PR and update the linked QA issue with your findings
 ```
 
 **③ Watch the agent work** — it will:
-- Read the full PR diff automatically
-- Analyze for bugs (the string date comparison on line 39-40, the zero-amount edge case on lines 42-44)
-- Post inline review comments directly on the problematic lines
-- Generate a regression test checklist
-- Submit a batched code review with `REQUEST_CHANGES`
+1. Read the PR diff (payment processing changes)
+2. Analyze from a QA perspective — regression risk, edge cases, security
+3. Post a code review on the PR with `REQUEST_CHANGES`
+4. Find the linked QA issue ("Review PR: Discount code support")
+5. Post a QA summary comment on the issue with findings and checklist status
+6. Add the `reviewed` label to the issue
 
-**🗣️ Say:** *"One prompt — and Copilot does a full QA review. It posted inline comments on the exact lines with issues, generated a test checklist, and submitted the review. This is like having a senior engineer pair-reviewing with you, but available 24/7."*
+**🗣️ Say:** *"One prompt — and the agent did a complete QA workflow. It reviewed the PR, found the bugs (the date comparison issue, the zero-amount edge case), posted the review, and then went back and updated the QA issue with its findings. The issue now has a full audit trail."*
 
-> **Show the review on GitHub.com:** Switch to the browser and open the PR's "Files changed" tab to show the inline comments the agent posted.
+> **Show both on GitHub.com:**
+> 1. The PR's "Files changed" tab — show the review with inline comments
+> 2. The QA issue — show the comment the agent posted with findings and checklist
 
 ---
 
-### Step 3.3 — Highlight the Custom Agent (2 min)
+### Step 3.3 — Highlight the Custom Agent & Copilot Features (2 min)
 
 **① Open `.github/agents/pr-reviewer.agent.md` in VS Code to show the audience how it's built.**
 
-**🗣️ Say:** *"This agent is just a markdown file in the repo. It defines what tools to use, how to analyze code, and what to look for. Any team can customize this — add your own coding standards, security requirements, or domain-specific checks."*
+**🗣️ Say:** *"This agent is a markdown file in the repo. It defines the QA review process — what to look for, how to post the review, and how to update the issue. Any team can customize this with their own standards."*
 
-> Key points to highlight:
-> - The `tools:` list gives it access to PR reading and review-writing capabilities
-> - The workflow section defines the review process
-> - Teams can fork this and add their own review criteria
+> **Key Copilot features to highlight for QA teams:**
+> - **Custom agents** — encode your QA review process as a reusable agent
+> - **PR reviews** — Copilot analyzes diffs for bugs, edge cases, security issues
+> - **Issue updates** — the agent closes the loop by updating the QA task with findings
+> - **`gh` CLI fallback** — works in Codespaces, local VS Code, or any terminal
+> - **Copilot in GitHub.com** — can also assign `@copilot` as a PR reviewer directly from the PR page
 
-**🗣️ Say:** *"Instead of guessing what to test, QA gets a targeted review and test checklist — all from one command."*
+**🗣️ Say:** *"The QA team gets a full audit trail — from issue to review to findings — all automated. Instead of context-switching between the issue, the PR, and a spreadsheet, everything stays connected."*
 
 ---
 

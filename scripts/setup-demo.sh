@@ -208,6 +208,7 @@ else
   gh label create "testing" --description "Test coverage tasks" --color "1D76DB" --repo "$REPO_FULL_NAME" 2>/dev/null || true
   gh label create "blocked" --description "Blocked / waiting on dependency" --color "B60205" --repo "$REPO_FULL_NAME" 2>/dev/null || true
   gh label create "in-review" --description "Currently under review" --color "FBCA04" --repo "$REPO_FULL_NAME" 2>/dev/null || true
+  gh label create "reviewed" --description "QA review complete" --color "0075CA" --repo "$REPO_FULL_NAME" 2>/dev/null || true
 
   # Create issues that map to Alex's day
   echo "  Creating issues..."
