@@ -15,7 +15,6 @@
 #   - Node.js 18+
 #   - GitHub CLI (gh) installed and authenticated: gh auth login
 #   - Git installed
-#   - jq installed (sudo apt install jq)
 # =============================================================
 
 set -euo pipefail
@@ -132,8 +131,8 @@ git checkout main
 echo "  Creating branch: feature/add-new-dependency..."
 git checkout -b feature/add-new-dependency
 
-# Add a dependency with known vulnerabilities using jq
-jq '.dependencies["node-fetch"] = "2.6.0"' package.json > package.json.tmp && mv package.json.tmp package.json
+# Add a dependency with known vulnerabilities
+node -e "const p=require('./package.json'); p.dependencies['node-fetch']='2.6.0'; require('fs').writeFileSync('package.json', JSON.stringify(p, null, 2)+'\n')"
 git add package.json
 git commit -m "Add node-fetch for API calls"
 git push -u origin feature/add-new-dependency
