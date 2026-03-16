@@ -210,7 +210,7 @@ else
   gh label create "in-review" --description "Currently under review" --color "FBCA04" --repo "$REPO_FULL_NAME" 2>/dev/null || true
   gh label create "reviewed" --description "QA review complete" --color "0075CA" --repo "$REPO_FULL_NAME" 2>/dev/null || true
 
-  # Create issues that map to Alex's day
+  # Create issues that map to the QA staff member's day
   echo "  Creating issues..."
 
 ISSUE1_URL=$(gh issue create --repo "$REPO_FULL_NAME" \

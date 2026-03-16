@@ -9,8 +9,8 @@
 **GitHub Copilot & Advanced Security**
 *A Day in the Life of QA*
 
-Alex Rivera — QA Engineer
-A typical Tuesday
+A Day in the Life of QA
+A typical workday
 
 
 ---
@@ -57,15 +57,15 @@ Security alert triage → Validating a fix → End of day
 
 ---
 
-## Slide 5: Meet Alex
+## Slide 5: Meet the QA Staff Member
 
-👤 Alex Rivera — QA Engineer
+👤 QA Staff Member
 - Picks up Jira tickets at standup
 - Writes automated tests
 - Reviews pull requests
 - Triages security alerts
 
-*Today we follow Alex through a typical Tuesday.*
+*Today we follow a QA staff member through a typical workday.*
 
 
 ---
@@ -75,7 +75,7 @@ Security alert triage → Validating a fix → End of day
 # ☕ Morning: Writing Tests
 ### GitHub Copilot in Action
 
-Alex's ticket: *"Add test coverage for the new user registration endpoint."*
+The QA ticket: *"Add test coverage for the new user registration endpoint."*
 
 
 ---
@@ -132,7 +132,7 @@ A developer submitted a change to payment processing logic.
 # 🔒 After Lunch: Security Alerts
 ### GitHub Advanced Security
 
-Alex gets a Slack notification:
+Our QA engineer gets a Slack notification:
 *"Code scanning found 2 new alerts on the main branch."*
 
 
@@ -163,7 +163,7 @@ Alex gets a Slack notification:
 # 📦 Mid-Afternoon: Dependencies
 ### Dependabot & Supply Chain Security
 
-Alex reviews the weekly Dependabot digest — 3 alerts overnight.
+Our QA engineer reviews the weekly Dependabot digest — 3 alerts overnight.
 
 
 ---
@@ -180,7 +180,7 @@ Alex reviews the weekly Dependabot digest — 3 alerts overnight.
 # ⚡ The Power Combo
 ### Copilot + GHAS Together
 
-CodeQL found a SQL injection. Alex needs to verify the fix.
+CodeQL found a SQL injection. Our QA engineer needs to verify the fix.
 This is where both tools shine together.
 
 
@@ -225,12 +225,12 @@ QA runs the test against the fix
 
 ## Slide 21: Before & After
 
-**Alex's day BEFORE:**
+**A QA staff member's day BEFORE:**
 - Write tests manually
 - Review PRs line-by-line
 - Hope security issues get caught in pen testing
 
-**Alex's day NOW:**
+**A QA staff member's day NOW:**
 - Generate tests in minutes
 - Get AI-assisted reviews
 - Vulnerabilities surfaced automatically

@@ -2,7 +2,7 @@
 // SQL Injection fix for demo Block 7
 // (Copilot + GHAS Together: Fixing a Vulnerability)
 //
-// This is the "developer's fix" that Alex verifies in the demo.
+// This is the "developer's fix" that the QA staff member verifies in the demo.
 // Compare with src/routes/search.js to see the vulnerability.
 // ============================================================
 

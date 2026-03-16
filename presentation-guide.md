@@ -13,7 +13,7 @@
 | **Duration** | 60 minutes |
 | **Format** | Story-driven walkthrough + live demos |
 | **Audience** | QA staff / leadership |
-| **Narrative** | Follow "Alex," a QA engineer, through a typical workday |
+| **Narrative** | Follow a QA staff member through a typical workday |
 
 ---
 
@@ -54,7 +54,7 @@
 - [ ] Open **Copilot Chat** panel in VS Code (Ctrl+Shift+I)
 - [ ] Open browser tab 1: http://localhost:3000 → click through pages to verify
 - [ ] Open browser tab 2: `github.com/{your-repo}/security` (Security overview)
-- [ ] Open browser tab 3: `github.com/{your-repo}/projects` → open "QA Sprint Board — Alex's Tuesday"
+- [ ] Open browser tab 3: `github.com/{your-repo}/projects` → open "QA Sprint Board"
 - [ ] Run `npm test` → verify 12 tests pass (3 suites)
 - [ ] Keep **this guide** open on your second screen
 - [ ] Have a timer visible
@@ -84,7 +84,7 @@
 > No demo — just talk.
 
 ### Say This:
-1. *"Today we're going to follow Alex, a QA engineer, through a typical day."*
+1. *"Today we're going to follow a QA staff member through a typical day."*
 2. Quick poll: *"How many of you write automated tests? How many review PRs for security?"*
 3. Set the frame: *"Quality and Security are two sides of the same coin — QA is uniquely positioned to own both."*
 4. *"We'll see two GitHub tools that transform how QA works — Copilot for productivity and Advanced Security for shifting security left."*
@@ -99,9 +99,9 @@
 # Block 2: Copilot — Writing Tests (12 min) 🖥️ DEMO
 
 ### Say This First:
-*"Alex opens the project board and picks up the first issue in the backlog: 'Add test coverage for user registration endpoint.' Instead of writing tests from scratch, Alex uses Copilot."*
+*"Our QA engineer opens the project board and picks up the first issue in the backlog: 'Add test coverage for user registration endpoint.' Instead of writing tests from scratch, they use Copilot."*
 
-> **Optional:** Switch to browser → GitHub.com → Projects → "QA Sprint Board — Alex's Tuesday" and click the "Add test coverage for user registration endpoint" card to show the issue before switching to VS Code.
+> **Optional:** Switch to browser → GitHub.com → Projects → "QA Sprint Board" and click the "Add test coverage for user registration endpoint" card to show the issue before switching to VS Code.
 
 ---
 
@@ -211,7 +211,7 @@ What does this test verify? Are there any gaps in the test coverage? What edge c
 # Block 3: Copilot — QA Code Review & Issue Tracking (8 min) 🖥️ DEMO
 
 ### Say This First:
-*"Alex's morning continues with PR reviews. On the project board, there's a QA task: 'Review PR — Discount code support for payments.' Let's see how a QA engineer uses Copilot to handle this end-to-end."*
+*"The morning continues with PR reviews. On the project board, there's a QA task: 'Review PR — Discount code support for payments.' Let's see how a QA engineer uses Copilot to handle this end-to-end."*
 
 ---
 
@@ -221,7 +221,7 @@ What does this test verify? Are there any gaps in the test coverage? What edge c
 
 > Show the issue body — it has a QA checklist (race conditions, zero-amount, expired codes) and a link to the PR.
 
-**🗣️ Say:** *"This is Alex's task — a structured QA review checklist created when the PR was opened. Let's use a custom Copilot agent to do the review and update this issue automatically."*
+**🗣️ Say:** *"This is the QA task — a structured review checklist created when the PR was opened. Let's use a custom Copilot agent to do the review and update this issue automatically."*
 
 ---
 
@@ -276,9 +276,9 @@ Review the payment discount PR and update the linked QA issue with your findings
 > No demo — just talk. Bridge from Copilot to GHAS.
 
 ### Say This:
-1. *"Alex has been productive all morning — tests written, PRs reviewed. But there's another dimension to quality that QA teams are increasingly responsible for: security."*
+1. *"Our QA engineer has been productive all morning — tests written, PRs reviewed. But there's another dimension to quality that QA teams are increasingly responsible for: security."*
 2. *"A bug that lets users register with invalid emails is a quality issue. A bug that lets attackers inject SQL through the registration form is a security issue. The skills to find both are the same."*
-3. *"GitHub Advanced Security brings security directly into the workflows Alex already uses."*
+3. *"GitHub Advanced Security brings security directly into the workflows QA staff already use."*
 
 ### Key Message:
 > *"You don't need to become a security expert. GHAS brings security expertise to you, right where you already work."*
@@ -290,7 +290,7 @@ Review the payment discount PR and update the linked QA issue with your findings
 # Block 5: GHAS — Code Scanning & Secret Scanning (12 min) 🖥️ DEMO
 
 ### Say This First:
-*"After lunch, Alex gets a Slack notification: 'Code scanning found 2 new alerts on the main branch.'"*
+*"After lunch, our QA engineer gets a Slack notification: 'Code scanning found 2 new alerts on the main branch.'"*
 
 ---
 
@@ -407,7 +407,7 @@ src/routes/search.js
 # Block 6: GHAS — Dependabot & Supply Chain (8 min) 🖥️ DEMO
 
 ### Say This First:
-*"Alex reviews the weekly Dependabot digest — 3 dependency alerts came in overnight."*
+*"Our QA engineer reviews the weekly Dependabot digest — 3 dependency alerts came in overnight."*
 
 ---
 
@@ -454,7 +454,7 @@ src/routes/search.js
 # Block 7: The Power Combo — Copilot + GHAS Together (8 min) 🖥️ DEMO
 
 ### Say This First:
-*"Alex's best moment of the day: a CodeQL alert found a SQL injection vulnerability. Now Alex needs to verify the fix. This is where both tools shine together."*
+*"The highlight of the day: a CodeQL alert found a SQL injection vulnerability. Now our QA engineer needs to verify the fix. This is where both tools shine together."*
 
 ---
 
@@ -546,13 +546,13 @@ Does this fix properly prevent SQL injection? Are there any remaining security c
 # Block 7.5: Project Management — The Full Picture (3 min) 🖥️ DEMO
 
 ### Say This First:
-*"Before we wrap up, let me show you how all of this ties together from a project management perspective. Alex doesn't just work in isolation — every task we saw today lives on a kanban board that the whole team can see."*
+*"Before we wrap up, let me show you how all of this ties together from a project management perspective. QA staff don't just work in isolation — every task we saw today lives on a kanban board that the whole team can see."*
 
 ---
 
 ### Step 7.5.1 — Show the Project Board (1 min)
 
-**① Switch to browser → GitHub.com → Projects tab → "QA Sprint Board — Alex's Tuesday"**
+**① Switch to browser → GitHub.com → Projects tab → "QA Sprint Board"**
 
 > Show the kanban board with columns: **Todo**, **In Progress**, **Done**.
 > The board was created by the setup script with 6 issues and 2 PRs.
@@ -568,7 +568,7 @@ Point out the cards:
 | Cards also | "Investigate secret scanning alert" | Block 5 — Secret scanning |
 | Cards also | "Validate Dependabot dependency updates" | Block 6 — Dependabot |
 
-**🗣️ Say:** *"Every task Alex worked on today is tracked here. QA leadership gets full visibility — what's been triaged, what's in progress, what's done."*
+**🗣️ Say:** *"Every task our QA engineer worked on today is tracked here. QA leadership gets full visibility — what's been triaged, what's in progress, what's done."*
 
 ---
 
@@ -587,13 +587,13 @@ Point out the cards:
 
 **① Drag the "Add test coverage for user registration endpoint" card from Todo → Done**
 
-> This is the task Alex completed in Block 2 using Copilot.
+> This is the task completed in Block 2 using Copilot.
 
 **② (Optional) Drag "Triage CodeQL security alerts" from In Progress → Done**
 
-> This is the task Alex completed in Block 5.
+> This is the task completed in Block 5.
 
-**🗣️ Say:** *"As Alex completes each task — writing tests, triaging alerts, verifying fixes — the board updates. At the end of the day, leadership sees exactly what was accomplished and what's still open."*
+**🗣️ Say:** *"As each task is completed — writing tests, triaging alerts, verifying fixes — the board updates. At the end of the day, leadership sees exactly what was accomplished and what's still open."*
 
 ### Key Message:
 > *"This isn't just about individual productivity. It's about giving the whole team — QA engineers, leads, and management — a shared view of quality and security work, tracked right alongside the code."*
@@ -611,7 +611,7 @@ Point out the cards:
 - **Project Board:** Full visibility for QA leadership — every task tracked from issue to done
 
 ### Closing Statement:
-> *"Alex's day used to be: write tests manually, review PRs line-by-line, and hope security issues get caught in penetration testing. Now it's: generate tests in minutes, get AI-assisted reviews, and have vulnerabilities surfaced automatically. The time QA saves goes into what humans do best — creative exploratory testing and critical thinking."*
+> *"A QA staff member's day used to be: write tests manually, review PRs line-by-line, and hope security issues get caught in penetration testing. Now it's: generate tests in minutes, get AI-assisted reviews, and have vulnerabilities surfaced automatically. The time QA saves goes into what humans do best — creative exploratory testing and critical thinking."*
 
 ### Q&A Prompts (if the room is quiet):
 - *"What part of your current testing workflow takes the most time?"*
@@ -670,7 +670,7 @@ Copy-paste these during the demo. Organized by block.
 | 7.2 | `src/routes/search.js` | SQL injection to explain |
 | 7.3 | `tests/security.copilot-demo.test.js` | Blank security test file |
 | 7.4 | `demo-assets/search-fixed.js` | The parameterized query fix (lines 16-19) |
-| 7.5 | GitHub.com → Projects tab | "QA Sprint Board — Alex's Tuesday" kanban board |
+| 7.5 | GitHub.com → Projects tab | "QA Sprint Board" kanban board |
 
 ---
 

@@ -154,7 +154,7 @@ gh label create "testing" --description "Test coverage tasks" --color "1D76DB" -
 gh label create "blocked" --description "Blocked / waiting on dependency" --color "B60205" --repo $repoFullName 2>$null
 gh label create "in-review" --description "Currently under review" --color "FBCA04" --repo $repoFullName 2>$null
 
-# Create issues that map to Alex's day
+# Create issues that map to the QA staff member's day
 Write-Host "  Creating issues..."
 
 $issue1Url = gh issue create --repo $repoFullName `
@@ -195,7 +195,7 @@ $issue6Url = gh issue create --repo $repoFullName `
 
 # Create the GitHub Project (v2)
 Write-Host "  Creating GitHub Project board..."
-$projectCreateOutput = gh project create --owner $projectOwner --title "QA Sprint Board — Alex's Tuesday" --format json 2>&1
+$projectCreateOutput = gh project create --owner $projectOwner --title "QA Sprint Board" --format json 2>&1
 $projectNumber = ($projectCreateOutput | ConvertFrom-Json).number
 
 if (-not $projectNumber) {
@@ -269,7 +269,7 @@ Write-Host "  Repository:  https://github.com/$repoFullName"
 Write-Host "  PR #1:       feature/payment-discount (Block 3 - Code Review demo)"
 Write-Host "  PR #2:       feature/add-new-dependency (Block 6 - Dependency Review demo)"
 if ($projectNumber) {
-Write-Host "  Project:     #$projectNumber — 'QA Sprint Board - Alex's Tuesday'"
+Write-Host "  Project:     #$projectNumber — 'QA Sprint Board'"
 Write-Host "  Issues:      6 issues across Todo / In Progress columns"
 }
 Write-Host ""

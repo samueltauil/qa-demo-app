@@ -63,7 +63,7 @@ db.exec(`
 const passwordHash = bcrypt.hashSync('password123', 10);
 
 const users = [
-  { email: 'alex@company.com', name: 'Alex Rivera' },
+  { email: 'taylor@company.com', name: 'Taylor Morgan' },
   { email: 'jordan@company.com', name: 'Jordan Chen' },
   { email: 'sam@company.com', name: 'Sam Patel' },
   { email: 'admin@company.com', name: 'Admin User' }

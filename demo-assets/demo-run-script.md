@@ -22,7 +22,7 @@
 
 ## Block 1: Opening & Scene Setting (5 min) — TALK ONLY
 
-No demo needed. Tell Alex's story.
+No demo needed. Set the scene.
 
 
 ---
