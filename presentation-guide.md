@@ -215,54 +215,52 @@ What does this test verify? Are there any gaps in the test coverage? What edge c
 
 ---
 
-### Step 3.1 — PR Summary (2 min)
+### Step 3.1 — Open the PR in VS Code (1 min)
 
-**① Open this file in VS Code (or show on GitHub if you created a real PR):**
-```
-demo-assets/pr-description.md
-```
-> This is the PR description for "PR #42: Refactor payment processing with discount support." Read through it with the audience — it adds discount code validation to payments.
+**① In VS Code, open the GitHub Pull Requests panel (left sidebar) and check out the payment-discount PR.**
 
-**🗣️ Say:** *"QA reviewers can immediately understand what changed and why without reading every line."*
+> The PR title is "feat: Add discount code support to payment processing". Click on it to view the diff.
 
-> **If using GitHub.com:** Open the real PR and show the Copilot-generated PR summary instead.
+**🗣️ Say:** *"Alex sees a new PR assigned for review. Instead of manually reading every line, let's use a custom Copilot agent built specifically for QA reviews."*
 
 ---
 
-### Step 3.2 — Ask Copilot About the Code Change (3 min)
+### Step 3.2 — Run the PR Reviewer Agent (5 min)
 
-**① Open this file in VS Code:**
-```
-demo-assets/PaymentService-pr-diff.js
-```
-> This is the "developer's diff" — the new payment processing with discount codes. The review questions are embedded in lines 20-26.
+**① In Copilot Chat, select the `pr-reviewer` agent from the agent picker (dropdown at the top).**
 
-**② Open Copilot Chat and paste this prompt:**
+> This is a custom agent defined in `.github/agents/pr-reviewer.agent.md` — it knows how to read PR diffs, find bugs, and post review comments.
+
+**② Type this single prompt:**
 ```
-Review this code change. Could it introduce any race conditions?
+Review this PR for bugs, race conditions, edge cases, and security issues
 ```
 
-**③ Show Copilot's response**, then paste this follow-up prompt:
-```
-What happens if the payment amount is zero after applying the discount? What about negative amounts?
-```
+**③ Watch the agent work** — it will:
+- Read the full PR diff automatically
+- Analyze for bugs (the string date comparison on line 39-40, the zero-amount edge case on lines 42-44)
+- Post inline review comments directly on the problematic lines
+- Generate a regression test checklist
+- Submit a batched code review with `REQUEST_CHANGES`
 
-> Copilot should catch the bugs on lines 39-40 (expiration check using string comparison) and lines 42-44 (no handling of $0 final amount).
+**🗣️ Say:** *"One prompt — and Copilot does a full QA review. It posted inline comments on the exact lines with issues, generated a test checklist, and submitted the review. This is like having a senior engineer pair-reviewing with you, but available 24/7."*
 
-**🗣️ Say:** *"This is like having a senior engineer pair-reviewing with you."*
+> **Show the review on GitHub.com:** Switch to the browser and open the PR's "Files changed" tab to show the inline comments the agent posted.
 
 ---
 
-### Step 3.3 — Generate Regression Test Checklist (3 min)
+### Step 3.3 — Highlight the Custom Agent (2 min)
 
-**① Still with `PaymentService-pr-diff.js` open, paste this prompt into Copilot Chat:**
-```
-What tests should I add to verify this PR doesn't break existing payment processing behavior? Give me a specific test checklist.
-```
+**① Open `.github/agents/pr-reviewer.agent.md` in VS Code to show the audience how it's built.**
 
-**② Show the checklist** Copilot generates — it should cover: valid discount codes, invalid codes, expired codes, $0 amount edge case, and original non-discount flow still working.
+**🗣️ Say:** *"This agent is just a markdown file in the repo. It defines what tools to use, how to analyze code, and what to look for. Any team can customize this — add your own coding standards, security requirements, or domain-specific checks."*
 
-**🗣️ Say:** *"Instead of guessing what to test, QA gets a targeted list."*
+> Key points to highlight:
+> - The `tools:` list gives it access to PR reading and review-writing capabilities
+> - The workflow section defines the review process
+> - Teams can fork this and add their own review criteria
+
+**🗣️ Say:** *"Instead of guessing what to test, QA gets a targeted review and test checklist — all from one command."*
 
 ---
 
