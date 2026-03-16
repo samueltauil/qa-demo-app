@@ -325,9 +325,10 @@ src/routes/search.js
 
 **🗣️ Say:** *"CodeQL doesn't just find the bug — it shows you the path the data takes. This is exactly the kind of analysis QA does when writing test cases."*
 
-> **Also mention:** There are two more CodeQL alerts ready in the repo:
-> - **XSS** in `src/views/profile.ejs` line 30: `<%- user.bio %>` uses unescaped output
-> - **Path Traversal** in `src/routes/files.js` line 23: `path.join(UPLOADS_DIR, fileName)` without validation
+> **Also mention:** There are more CodeQL alerts ready in the repo:
+> - **Path Traversal** (x2) in `src/routes/files.js` line 23: `path.join(UPLOADS_DIR, fileName)` without validation
+> - **Polynomial ReDoS** in `src/services/UserService.js`: email regex can cause catastrophic backtracking
+> - **Missing Rate Limiting** (x6) across multiple routes
 
 ---
 
