@@ -15,6 +15,7 @@
 #   - Node.js 18+
 #   - GitHub CLI (gh) installed and authenticated: gh auth login
 #   - Git installed
+#   - The 'project' scope is auto-added if missing (gh auth refresh -s project)
 # =============================================================
 
 set -euo pipefail
@@ -32,6 +33,16 @@ if [ -z "$(git config user.name)" ] || [ -z "$(git config user.email)" ]; then
   echo "  git config --global user.email \"you@example.com\""
   echo "  git config --global user.name \"Your Name\""
   exit 1
+fi
+
+# ── Pre-flight: ensure gh token has 'project' scope ──────────
+TOKEN_SCOPES=$(gh auth status 2>&1 || true)
+if ! echo "$TOKEN_SCOPES" | grep -q "project"; then
+  echo ""
+  echo "Your GitHub token is missing the 'project' scope (needed for Project boards)."
+  echo "Refreshing token scopes — you may be prompted to authenticate..."
+  gh auth refresh -s project
+  echo "  ✅ 'project' scope added"
 fi
 
 if [ -n "$ORG" ]; then
@@ -304,10 +315,17 @@ fi  # end of issue creation block
 echo "  Collecting issue URLs..."
 ISSUE_URLS=$(gh issue list --repo "$REPO_FULL_NAME" --state all --json url --jq '.[].url' 2>/dev/null)
 
-# Create the GitHub Project (v2)
+# Create the GitHub Project (v2) via GraphQL API
+# (gh project create has a bug in gh 2.87+, so we use the API directly)
 echo "  Creating GitHub Project board..."
-PROJECT_JSON=$(gh project create --owner "$PROJECT_OWNER" --title "QA Sprint Board — Alex's Tuesday" --format json 2>&1) || true
-PROJECT_NUMBER=$(echo "$PROJECT_JSON" | node -e "let d='';process.stdin.on('data',c=>d+=c);process.stdin.on('end',()=>{try{const j=JSON.parse(d);process.stdout.write(String(j.number||''))}catch(e){}})" 2>/dev/null)
+OWNER_NODE_ID=$(gh api user --jq '.node_id' 2>/dev/null)
+PROJECT_RESULT=$(gh api graphql -f query="
+mutation {  
+  createProjectV2(input: {ownerId: \"$OWNER_NODE_ID\", title: \"QA Sprint Board — Alex's Tuesday\"}) {
+    projectV2 { id number url }
+  }
+}" 2>&1) || true
+PROJECT_NUMBER=$(echo "$PROJECT_RESULT" | node -e "let d='';process.stdin.on('data',c=>d+=c);process.stdin.on('end',()=>{try{const j=JSON.parse(d);process.stdout.write(String(j.data.createProjectV2.projectV2.number||''))}catch(e){}})" 2>/dev/null)
 
 if [ -z "$PROJECT_NUMBER" ]; then
   echo "  ⚠️  Could not create project automatically. Create it manually at github.com"
