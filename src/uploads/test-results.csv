@@ -1,0 +1,6 @@
+test,status,duration_ms
+login_valid,pass,120
+login_invalid,pass,85
+register_new_user,pass,230
+register_duplicate,pass,95
+search_products,pass,150

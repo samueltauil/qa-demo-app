@@ -1,0 +1,29 @@
+{
+  "name": "qa-demo-app",
+  "version": "1.0.0",
+  "description": "Demo web app for GitHub Copilot & Advanced Security presentation",
+  "main": "src/app.js",
+  "scripts": {
+    "start": "node src/app.js",
+    "test": "jest --verbose",
+    "test:e2e": "npx playwright test",
+    "seed": "node src/seed.js",
+    "demo:setup": "bash scripts/setup-demo.sh",
+    "demo:reset": "bash scripts/reset-demo.sh"
+  },
+  "dependencies": {
+    "express": "^4.18.2",
+    "better-sqlite3": "^9.4.3",
+    "bcrypt": "^5.1.0",
+    "ejs": "^3.1.9",
+    "lodash": "4.17.20",
+    "axios": "0.21.1",
+    "jsonwebtoken": "^8.5.1",
+    "express-fileupload": "^1.4.0"
+  },
+  "devDependencies": {
+    "jest": "^29.7.0",
+    "supertest": "^6.3.3",
+    "@playwright/test": "^1.42.0"
+  }
+}

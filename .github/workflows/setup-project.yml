@@ -1,0 +1,163 @@
+# =============================================================
+# Automatically creates labels and issues when this repo is
+# created from a template.
+#
+# Triggers on the first push to main. Skips if issues already
+# exist (to avoid duplicates on subsequent pushes).
+#
+# The project board is created by setup-demo.sh (run locally)
+# since it uses your gh CLI auth — no PAT secret needed.
+# =============================================================
+
+name: Setup Project Board
+
+on:
+  push:
+    branches: [main]
+  workflow_dispatch:
+
+permissions:
+  issues: write
+  contents: read
+
+jobs:
+  setup:
+    runs-on: ubuntu-latest
+    # Only run if no issues exist yet (first-time setup)
+    steps:
+      - name: Check if already set up
+        id: check
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        run: |
+          ISSUE_COUNT=$(gh issue list --repo "$GITHUB_REPOSITORY" --state all --limit 1 --json number --jq 'length')
+          if [ "$ISSUE_COUNT" -gt 0 ]; then
+            echo "skip=true" >> "$GITHUB_OUTPUT"
+            echo "Issues already exist — skipping setup."
+          else
+            echo "skip=false" >> "$GITHUB_OUTPUT"
+            echo "No issues found — running first-time setup."
+          fi
+
+      - name: Create labels
+        if: steps.check.outputs.skip == 'false'
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        run: |
+          gh label create "QA"        --description "QA team tasks"                  --color "0E8A16" --repo "$GITHUB_REPOSITORY" 2>/dev/null || true
+          gh label create "security"  --description "Security-related items"         --color "D93F0B" --repo "$GITHUB_REPOSITORY" 2>/dev/null || true
+          gh label create "testing"   --description "Test coverage tasks"            --color "1D76DB" --repo "$GITHUB_REPOSITORY" 2>/dev/null || true
+          gh label create "blocked"   --description "Blocked / waiting on dependency" --color "B60205" --repo "$GITHUB_REPOSITORY" 2>/dev/null || true
+          gh label create "in-review" --description "Currently under review"         --color "FBCA04" --repo "$GITHUB_REPOSITORY" 2>/dev/null || true
+          echo "✅ Labels created"
+
+      - name: Create issues
+        if: steps.check.outputs.skip == 'false'
+        id: issues
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        run: |
+          ISSUE1_URL=$(gh issue create --repo "$GITHUB_REPOSITORY" \
+            --title "Add test coverage for user registration endpoint" \
+            --body "## Description
+          The new user registration endpoint (\`UserService.register()\`) needs comprehensive test coverage.
+
+          ## Acceptance Criteria
+          - [ ] Unit tests for all validation rules (email format, password strength, name length)
+          - [ ] Edge case tests (duplicate email, unicode names, boundary values)
+          - [ ] Integration tests for the REST API endpoint
+          - [ ] E2E test for the registration form
+
+          ## Notes
+          See \`src/services/UserService.js\` for the implementation.
+          Blank test file ready at \`tests/UserService.copilot-demo.test.js\`." \
+            --label "QA,testing" \
+            --assignee "@me")
+
+          ISSUE2_URL=$(gh issue create --repo "$GITHUB_REPOSITORY" \
+            --title "Review PR: Discount code support for payments" \
+            --body "## Description
+          Review PR #1 (feat: Add discount code support to payment processing).
+
+          ## QA Review Checklist
+          - [ ] Check for race conditions with concurrent discount usage
+          - [ ] Verify behavior when discount makes amount zero
+          - [ ] Verify expired discount codes are rejected
+          - [ ] Ensure original non-discount flow still works
+          - [ ] Generate regression test checklist
+
+          ## Related
+          - PR: feature/payment-discount" \
+            --label "QA,in-review" \
+            --assignee "@me")
+
+          ISSUE3_URL=$(gh issue create --repo "$GITHUB_REPOSITORY" \
+            --title "Triage CodeQL security alerts on main branch" \
+            --body "## Description
+          Code scanning found new alerts on the main branch that need QA triage.
+
+          ## Alerts to Review
+          - [ ] SQL Injection in \`src/routes/search.js\`
+          - [ ] XSS in \`src/views/profile.ejs\`
+          - [ ] Path Traversal in \`src/routes/files.js\`
+
+          ## Actions Required
+          1. Review each alert and understand the data flow
+          2. Write security regression tests for each vulnerability
+          3. Verify developer fixes when PRs are submitted
+
+          ## Priority
+          High — these are exploitable vulnerabilities on the main branch." \
+            --label "QA,security" \
+            --assignee "@me")
+
+          ISSUE4_URL=$(gh issue create --repo "$GITHUB_REPOSITORY" \
+            --title "Investigate secret scanning alert — AWS key in config" \
+            --body "## Description
+          Secret scanning detected an AWS access key committed to the repository in \`src/config.js\`.
+
+          ## Actions Required
+          - [ ] Verify the key has been rotated/invalidated
+          - [ ] Confirm push protection is enabled to prevent future incidents
+          - [ ] Check if other config files contain credentials
+
+          ## Reference
+          File: \`src/config.js\` lines 13-14" \
+            --label "security" \
+            --assignee "@me")
+
+          ISSUE5_URL=$(gh issue create --repo "$GITHUB_REPOSITORY" \
+            --title "Validate Dependabot dependency updates" \
+            --body "## Description
+          Dependabot flagged vulnerable dependencies that need QA validation after updates.
+
+          ## Vulnerable Dependencies
+          - [ ] \`lodash@4.17.20\` — prototype pollution (CVE-2021-23337)
+          - [ ] \`axios@0.21.1\` — SSRF vulnerability
+
+          ## QA Tasks
+          1. Review each Dependabot PR
+          2. Run the full test suite against updated dependencies
+          3. Verify no breaking changes in functionality
+          4. Approve PRs if tests pass" \
+            --label "QA,security" \
+            --assignee "@me")
+
+          ISSUE6_URL=$(gh issue create --repo "$GITHUB_REPOSITORY" \
+            --title "Write security regression test for SQL injection fix" \
+            --body "## Description
+          After the SQL injection in \`src/routes/search.js\` is fixed, we need a regression test to ensure it never comes back.
+
+          ## Acceptance Criteria
+          - [ ] Test with common SQL injection payloads (\`' OR 1=1 --\`, \`UNION SELECT\`, \`DROP TABLE\`)
+          - [ ] Test passes against the fixed code (parameterized queries)
+          - [ ] Test fails against the original vulnerable code
+
+          ## Related
+          - CodeQL alert: SQL Injection
+          - Fix file: \`demo-assets/search-fixed.js\`
+          - Blank test file: \`tests/security.copilot-demo.test.js\`" \
+            --label "QA,security,testing" \
+            --assignee "@me")
+
+          echo "✅ 6 issues created"
