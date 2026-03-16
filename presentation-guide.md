@@ -331,13 +331,16 @@ src/routes/search.js
 
 ---
 
-### Step 5.3 — Alert in a PR (2 min)
+### Step 5.3 — Code Scanning in Action (2 min)
 
-**① Switch to GitHub.com → open a PR that triggered a code scanning alert**
+**① On GitHub.com → Security → Code scanning alerts → click the SQL injection alert → click "Show paths"**
 
-> Show the inline CodeQL annotation on the PR diff — the alert appears right next to the vulnerable code.
+> Walk through the **data flow path** — CodeQL traces user input from `req.query.q` through string concatenation into the SQL query. This is the same kind of taint analysis that security engineers perform manually.
 
-**🗣️ Say:** *"This catches issues before they merge — before QA even has to test them. It's shift-left in action."*
+**② (Optional) Show inline annotations on a PR:**
+> Open the payment discount PR ("feat: Add discount code support") → click the **Checks** tab → you'll see CodeQL ran on the PR. If CodeQL found alerts on the branch, they appear as annotations inline on the Files Changed tab.
+
+**🗣️ Say:** *"CodeQL runs on every PR and every push to main. Issues are flagged before they merge — before QA even has to test them. It's shift-left in action."*
 
 ---
 
