@@ -41,22 +41,24 @@ Analyze the diff from a **QA perspective** — not just code correctness, but us
 
 ## Step 3 — Post the PR Review
 
-Post a review on the PR. Try MCP tools first (`pull_request_review_write`). If unavailable, use `gh` CLI:
+Post a review on the PR. Try MCP tools first (`pull_request_review_write`). If unavailable, use `gh` CLI.
+
+**Important**: GitHub does not allow `REQUEST_CHANGES` on your own PR. If the authenticated user is the PR author, use `--comment` instead:
 
 ```bash
-gh pr review <number> --request-changes --body "## QA Review
+# Check if you're the PR author
+PR_AUTHOR=$(gh pr view <number> --json author --jq '.author.login')
+GH_USER=$(gh api user --jq '.login')
 
-### Issues Found
-...
-
-### Regression Test Checklist
-...
-
-### Verdict
-..."
+# Use --comment if you're the author, --request-changes otherwise
+if [ "$PR_AUTHOR" = "$GH_USER" ]; then
+  gh pr review <number> --comment --body-file /tmp/qa-review.md
+else
+  gh pr review <number> --request-changes --body-file /tmp/qa-review.md
+fi
 ```
 
-Use `REQUEST_CHANGES` if issues were found, `COMMENT` if only suggestions.
+**Always write the review body to a temp file** (`--body-file`) to avoid shell escaping issues with special characters.
 
 ## Step 4 — Update the Linked QA Issue
 
