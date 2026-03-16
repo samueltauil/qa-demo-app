@@ -94,6 +94,8 @@ echo "  Repo created: $REPO_FULL_NAME"
 # ── Step 4: Enable GHAS features ─────────────────────────────
 echo ""
 echo "[4/7] Enabling GitHub Advanced Security features..."
+echo "  Enabling dependency graph..."
+gh api "repos/$REPO_FULL_NAME/vulnerability-alerts" -X PUT 2>/dev/null || true
 echo "  Enabling secret scanning..."
 gh api "repos/$REPO_FULL_NAME" -X PATCH -f 'security_and_analysis[secret_scanning][status]=enabled' 2>/dev/null || true
 echo "  Enabling secret scanning push protection..."
