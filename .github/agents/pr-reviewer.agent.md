@@ -1,11 +1,9 @@
 ---
 description: "QA PR Reviewer — Reviews pull requests for bugs, race conditions, edge cases, and security issues. Use when asked to review a PR, analyze a pull request, check code changes, or generate a test checklist for a PR."
 tools:
+  - io.github.git/*
   - github-pull-request_activePullRequest
   - github-pull-request_openPullRequest
-  - mcp_io_github_git_pull_request_read
-  - mcp_io_github_git_pull_request_review_write
-  - mcp_io_github_git_add_comment_to_pending_review
   - read
   - search
 ---
