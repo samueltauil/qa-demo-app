@@ -306,10 +306,10 @@ Review the payment discount PR and update the linked QA issue with your findings
 
 ### Step 5.2 — CodeQL Alerts: SQL Injection (4 min)
 
-**① In the Security tab, click on the SQL injection CodeQL alert.**
+**① In the Security tab → Code scanning → click the alert titled "Database query built from user-controlled sources"**
 
 > Walk through:
-> - The alert title (SQL injection)
+> - The alert title and rule ID (`js/sql-injection`)
 > - The CWE reference
 > - The **data flow visualization** — trace from `req.query.q` to the SQL string
 
@@ -334,7 +334,7 @@ src/routes/search.js
 
 ### Step 5.3 — Code Scanning in Action (2 min)
 
-**① On GitHub.com → Security → Code scanning alerts → click the SQL injection alert → click "Show paths"**
+**① On GitHub.com → Security → Code scanning → click "Database query built from user-controlled sources" → click "Show paths"**
 
 > Walk through the **data flow path** — CodeQL traces user input from `req.query.q` through string concatenation into the SQL query. This is the same kind of taint analysis that security engineers perform manually.
 
@@ -421,7 +421,7 @@ src/routes/search.js
 
 ### Step 7.1 — Start with the CodeQL Alert (1 min)
 
-**① Show the SQL injection CodeQL alert** (same as Block 5, step 2 — on GitHub.com or reference the data flow).
+**① Show the SQL injection CodeQL alert** (same as Block 5, step 2 — "Database query built from user-controlled sources" on GitHub.com).
 
 > Quick reminder to audience: the vulnerability is in `src/routes/search.js` line 16 — user input concatenated into SQL.
 
