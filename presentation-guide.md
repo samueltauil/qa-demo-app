@@ -347,17 +347,38 @@ src/routes/search.js
 
 ### Step 5.4 — Secret Scanning (4 min)
 
-**① In GitHub.com → Security → Secret scanning alerts**
+> **Pre-demo prep:** Before the presentation, you need to plant a real-looking AWS key so secret scanning catches it. This must be done manually because GitHub's push protection blocks fake keys from being committed via scripts.
 
-> Show the alert for the AWS key. The hardcoded secret is in `src/config.js` lines 13-14:
-> ```
-> accessKeyId: 'AKIAIOSFODNN7EXAMPLE'
-> secretAccessKey: 'wJalrXUtnFEMI/K7MDENG/bPxRfiCYEXAMPLEKEY'
-> ```
+**① Plant the secret (do this BEFORE the demo, during setup):**
 
-**② (Optional) Demo push protection:**
-> In a terminal, try to commit a file containing `AKIAIOSFODNN7EXAMPLE` and push it.
-> Show the push being blocked by GitHub's push protection.
+1. Open `src/config.js` in VS Code
+2. Replace the placeholder values with a realistic-looking AWS key:
+   ```javascript
+   aws: {
+     accessKeyId: 'AKIA...',      // 20 chars starting with AKIA
+     secretAccessKey: '...',       // 40 char base64-like string
+     region: 'us-east-1'
+   }
+   ```
+3. Commit and push — GitHub will **block the push** with a push protection prompt
+4. On the push protection page, select **"It's used in tests"** and allow it
+5. Push again — it will succeed and create a secret scanning alert
+6. Wait ~2 minutes for the alert to appear under Security → Secret scanning
+
+> **Tip:** You can generate a realistic-looking (but fake) AWS key pair at https://docs.aws.amazon.com/IAM/latest/UserGuide/id_credentials_access-keys.html — just make sure the format is correct (AKIA + 16 alphanumeric chars for the access key, 40 chars for the secret).
+
+**② During the demo — show the alert:**
+
+**On GitHub.com → Security → Secret scanning alerts**
+
+> Show the alert for the AWS key. Click into it to show:
+> - The secret type (AWS Access Key)
+> - Where it was found (`src/config.js`)
+> - The commit that introduced it
+> - Remediation options (revoke, dismiss)
+
+**③ (Optional) Demo push protection live:**
+> Create a new file with a fake secret, commit it, and push. Show the push being blocked in real-time.
 
 **🗣️ Say:** *"How many of you have found credentials in config files during testing? Secret scanning catches these automatically — and push protection stops them from entering the repo at all."*
 
