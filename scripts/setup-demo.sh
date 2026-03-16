@@ -328,7 +328,7 @@ echo "  Creating GitHub Project board..."
 OWNER_NODE_ID=$(gh api user --jq '.node_id' 2>/dev/null)
 PROJECT_RESULT=$(gh api graphql -f query="
 mutation {
-  createProjectV2(input: {ownerId: \"$OWNER_NODE_ID\", title: \"QA Sprint Board — Alex's Tuesday\"}) {
+  createProjectV2(input: {ownerId: \"$OWNER_NODE_ID\", title: \"QA Sprint Board\"}) {
     projectV2 { id number url }
   }
 }" 2>&1) || true
@@ -415,7 +415,7 @@ echo "  Repository:  https://github.com/$REPO_FULL_NAME"
 echo "  PR #1:       feature/payment-discount (Block 3 - Code Review demo)"
 echo "  PR #2:       feature/add-new-dependency (Block 6 - Dependency Review demo)"
 if [ -n "$PROJECT_NUMBER" ]; then
-echo "  Project:     #$PROJECT_NUMBER — 'QA Sprint Board - Alex's Tuesday'"
+echo "  Project:     #$PROJECT_NUMBER — 'QA Sprint Board'"
 echo "  Issues:      6 issues across Todo / In Progress columns"
 fi
 echo ""
