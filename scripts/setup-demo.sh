@@ -135,7 +135,7 @@ Ticket: PROJ-142"
 
 git push -u origin feature/payment-discount
 
-gh pr create \
+PAYMENT_PR_URL=$(gh pr create \
   --title "feat: Add discount code support to payment processing" \
   --body "## Summary
 Added discount code validation and application to the payment processing flow.
@@ -149,7 +149,9 @@ Added discount code validation and application to the payment processing flow.
 - Tested manually with codes SAVE10 (10%) and SAVE20 (20%)
 - Need QA to verify edge cases: expired codes, stacking, zero-amount results" \
   --base main \
-  --head feature/payment-discount
+  --head feature/payment-discount)
+PAYMENT_PR_NUM=$(echo "$PAYMENT_PR_URL" | grep -oE '[0-9]+$')
+echo "  PR #$PAYMENT_PR_NUM created: $PAYMENT_PR_URL"
 
 # Branch: feature/add-new-dependency (for Block 6 - Dependency Review demo)
 git checkout main
@@ -162,11 +164,13 @@ git add package.json
 git commit -m "Add node-fetch for API calls"
 git push -u origin feature/add-new-dependency
 
-gh pr create \
+DEPENDENCY_PR_URL=$(gh pr create \
   --title "chore: Add node-fetch for external API calls" \
   --body "Added node-fetch@2.6.0 for making HTTP requests to external services." \
   --base main \
-  --head feature/add-new-dependency
+  --head feature/add-new-dependency)
+DEPENDENCY_PR_NUM=$(echo "$DEPENDENCY_PR_URL" | grep -oE '[0-9]+$')
+echo "  PR #$DEPENDENCY_PR_NUM created: $DEPENDENCY_PR_URL"
 
 git checkout main
 
@@ -226,7 +230,7 @@ Blank test file ready at \`tests/UserService.copilot-demo.test.js\`." \
 ISSUE2_URL=$(gh issue create --repo "$REPO_FULL_NAME" \
   --title "Review PR: Discount code support for payments" \
   --body "## Description
-Review PR #1 (feat: Add discount code support to payment processing).
+Review PR #$PAYMENT_PR_NUM (feat: Add discount code support to payment processing).
 
 ## QA Review Checklist
 - [ ] Check for race conditions with concurrent discount usage
@@ -236,7 +240,7 @@ Review PR #1 (feat: Add discount code support to payment processing).
 - [ ] Generate regression test checklist
 
 ## Related
-- PR: feature/payment-discount" \
+- PR: $PAYMENT_PR_URL" \
   --label "QA,in-review" \
   --assignee "@me")
 
@@ -353,10 +357,8 @@ mutation {
 
   # Add PRs to the project
   echo "  Adding PRs to project board..."
-  PR1_URL="https://github.com/$REPO_FULL_NAME/pull/1"
-  PR2_URL="https://github.com/$REPO_FULL_NAME/pull/2"
-  gh project item-add "$PROJECT_NUMBER" --owner "$PROJECT_OWNER" --url "$PR1_URL" 2>/dev/null || true
-  gh project item-add "$PROJECT_NUMBER" --owner "$PROJECT_OWNER" --url "$PR2_URL" 2>/dev/null || true
+  [ -n "$PAYMENT_PR_URL" ] && gh project item-add "$PROJECT_NUMBER" --owner "$PROJECT_OWNER" --url "$PAYMENT_PR_URL" 2>/dev/null || true
+  [ -n "$DEPENDENCY_PR_URL" ] && gh project item-add "$PROJECT_NUMBER" --owner "$PROJECT_OWNER" --url "$DEPENDENCY_PR_URL" 2>/dev/null || true
 
   # Get the Status field ID and option IDs to set columns
   echo "  Setting board column statuses..."
