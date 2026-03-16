@@ -206,6 +206,16 @@ What does this test verify? Are there any gaps in the test coverage? What edge c
 
 ---
 
+### Step 2.5 — Update the Project Board (30 sec)
+
+**① Switch to browser → GitHub.com → Projects tab → "QA Sprint Board"**
+
+**② Drag the "Add test coverage for user registration endpoint" card from Todo → Done**
+
+**🗣️ Say:** *"Task done — tests written, card moved. The board reflects our progress in real time. QA leadership sees exactly where we are."*
+
+---
+
 ---
 
 # Block 3: Copilot — QA Code Review & Issue Tracking (8 min) 🖥️ DEMO
@@ -402,6 +412,16 @@ src/routes/search.js
 
 ---
 
+### Step 5.5 — Update the Project Board (30 sec)
+
+**① Switch to browser → GitHub.com → Projects tab → "QA Sprint Board"**
+
+**② Drag the "Triage CodeQL security alerts on main branch" card from In Progress → Done**
+
+**🗣️ Say:** *"Alerts triaged, card updated. Every step of the QA workflow is tracked on the board — no separate status spreadsheet needed."*
+
+---
+
 ---
 
 # Block 6: GHAS — Dependabot & Supply Chain (8 min) 🖥️ DEMO
@@ -557,14 +577,14 @@ Does this fix properly prevent SQL injection? Are there any remaining security c
 > Show the kanban board with columns: **Todo**, **In Progress**, **Done**.
 > The board was created by the setup script with 6 issues and 2 PRs.
 
-Point out the cards:
+Point out the cards — some have already moved during the demo:
 
 | Column | Card | Maps to Demo Block |
-|--------|------|--------------------|
-| **Todo** | "Add test coverage for user registration endpoint" | Block 2 — Copilot wrote these tests |
+|--------|------|--------------------| 
+| **Done** | "Add test coverage for user registration endpoint" | Block 2 — moved after writing tests |
+| **Done** | "Triage CodeQL security alerts on main branch" | Block 5 — moved after triaging alerts |
 | **Todo** | "Write security regression test for SQL injection fix" | Block 7 — Copilot + GHAS together |
 | **In Progress** | "Review PR: Discount code support for payments" | Block 3 — Copilot code review |
-| **In Progress** | "Triage CodeQL security alerts on main branch" | Block 5 — GHAS code scanning |
 | Cards also | "Investigate secret scanning alert" | Block 5 — Secret scanning |
 | Cards also | "Validate Dependabot dependency updates" | Block 6 — Dependabot |
 
@@ -583,17 +603,13 @@ Point out the cards:
 
 ---
 
-### Step 7.5.3 — Drag a Card to Done (1 min)
+### Step 7.5.3 — Highlight the Cards Already Moved (1 min)
 
-**① Drag the "Add test coverage for user registration endpoint" card from Todo → Done**
+**① Point to the "Done" column** — the two cards moved earlier are already there:
+- "Add test coverage for user registration endpoint" (moved in Block 2)
+- "Triage CodeQL security alerts on main branch" (moved in Block 5)
 
-> This is the task completed in Block 2 using Copilot.
-
-**② (Optional) Drag "Triage CodeQL security alerts" from In Progress → Done**
-
-> This is the task completed in Block 5.
-
-**🗣️ Say:** *"As each task is completed — writing tests, triaging alerts, verifying fixes — the board updates. At the end of the day, leadership sees exactly what was accomplished and what's still open."*
+**🗣️ Say:** *"Notice we didn't save all the board updates for the end — we moved cards as we completed each task, just like a real workday. The board tells the story of the day in real time."*
 
 ### Key Message:
 > *"This isn't just about individual productivity. It's about giving the whole team — QA engineers, leads, and management — a shared view of quality and security work, tracked right alongside the code."*
@@ -660,12 +676,14 @@ Copy-paste these during the demo. Organized by block.
 | 2.3 | `e2e/registration.spec.js` | Partial E2E test — Copilot extends it |
 | 2.4 | `tests/PaymentService.test.js` | Complex test — Copilot finds gaps (lines 75-88) |
 | 2.4 alt | `tests/UserService.test.js` | Partial tests — gaps listed at lines 44-54 |
+| 2.5 | GitHub.com → Projects tab | Drag "Add test coverage" card → Done |
 | 3.1 | `demo-assets/pr-description.md` | PR description for review |
 | 3.2 | `demo-assets/PaymentService-pr-diff.js` | PR code diff with bugs (lines 39-44) |
 | 5.2 | `src/routes/search.js` | SQL injection vulnerability (line 16) |
 | 5.2 | `src/views/profile.ejs` | XSS vulnerability (line 30) |
 | 5.2 | `src/routes/files.js` | Path traversal vulnerability (line 23) |
 | 5.4 | `src/config.js` | Hardcoded AWS key (lines 13-14) |
+| 5.5 | GitHub.com → Projects tab | Drag "Triage CodeQL alerts" card → Done |
 | 6.3 | `.github/workflows/dependency-review.yml` | Dependency review config |
 | 7.2 | `src/routes/search.js` | SQL injection to explain |
 | 7.3 | `tests/security.copilot-demo.test.js` | Blank security test file |
