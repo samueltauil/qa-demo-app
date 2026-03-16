@@ -320,17 +320,30 @@ ISSUE_URLS=$(gh issue list --repo "$REPO_FULL_NAME" --state all --json url --jq 
 echo "  Creating GitHub Project board..."
 OWNER_NODE_ID=$(gh api user --jq '.node_id' 2>/dev/null)
 PROJECT_RESULT=$(gh api graphql -f query="
-mutation {  
+mutation {
   createProjectV2(input: {ownerId: \"$OWNER_NODE_ID\", title: \"QA Sprint Board — Alex's Tuesday\"}) {
     projectV2 { id number url }
   }
 }" 2>&1) || true
 PROJECT_NUMBER=$(echo "$PROJECT_RESULT" | node -e "let d='';process.stdin.on('data',c=>d+=c);process.stdin.on('end',()=>{try{const j=JSON.parse(d);process.stdout.write(String(j.data.createProjectV2.projectV2.number||''))}catch(e){}})" 2>/dev/null)
+PROJECT_NODE_ID=$(echo "$PROJECT_RESULT" | node -e "let d='';process.stdin.on('data',c=>d+=c);process.stdin.on('end',()=>{try{const j=JSON.parse(d);process.stdout.write(j.data.createProjectV2.projectV2.id||'')}catch(e){}})" 2>/dev/null)
 
 if [ -z "$PROJECT_NUMBER" ]; then
   echo "  ⚠️  Could not create project automatically. Create it manually at github.com"
 else
   echo "  ✅ Project #$PROJECT_NUMBER created"
+
+  # Link the project to the repository so it appears in the repo's Projects tab
+  REPO_NODE_ID=$(gh api "repos/$REPO_FULL_NAME" --jq '.node_id' 2>/dev/null)
+  if [ -n "$REPO_NODE_ID" ] && [ -n "$PROJECT_NODE_ID" ]; then
+    gh api graphql -f query="
+mutation {
+  linkProjectV2ToRepository(input: {projectId: \"$PROJECT_NODE_ID\", repositoryId: \"$REPO_NODE_ID\"}) {
+    repository { id }
+  }
+}" 2>/dev/null || true
+    echo "  ✅ Project linked to $REPO_FULL_NAME"
+  fi
 
   # Add issues to the project
   echo "  Adding issues to project board..."
