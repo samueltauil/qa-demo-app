@@ -21,6 +21,28 @@ cd "$(dirname "$0")/.."
 echo ""
 echo "=== QA Demo App — Reset for Next Run ==="
 
+# ── Step 0: Ensure clean git state ───────────────────────────
+CURRENT_BRANCH=$(git branch --show-current 2>/dev/null || echo "unknown")
+if [ "$CURRENT_BRANCH" != "main" ]; then
+  echo ""
+  echo "[0/4] Recovering to main branch..."
+  git checkout -- . 2>/dev/null || true
+  git clean -fd 2>/dev/null || true
+  git checkout main 2>/dev/null || git checkout -f main
+  echo "  ✅ Switched to main"
+fi
+
+# Discard any uncommitted changes on main
+git checkout -- . 2>/dev/null || true
+git clean -fd 2>/dev/null || true
+
+# Ensure dependencies are installed
+if [ ! -d "node_modules" ]; then
+  echo ""
+  echo "[0/4] Installing dependencies..."
+  npm install
+fi
+
 # ── Step 1: Restore blank demo test files ─────────────────────
 echo ""
 echo "[1/4] Restoring blank Copilot demo test files..."
@@ -67,12 +89,6 @@ echo "  ✅ tests/security.copilot-demo.test.js — restored to blank"
 # ── Step 2: Restore vulnerable source files ───────────────────
 echo ""
 echo "[2/4] Ensuring vulnerable source files are intact..."
-
-CURRENT_BRANCH=$(git branch --show-current)
-if [ "$CURRENT_BRANCH" != "main" ]; then
-  echo "  Switching to main branch..."
-  git checkout main
-fi
 
 git checkout -- src/routes/search.js 2>/dev/null || true
 git checkout -- src/routes/files.js 2>/dev/null || true
