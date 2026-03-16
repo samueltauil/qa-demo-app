@@ -1,7 +1,6 @@
 ---
 description: "QA PR Reviewer — Reviews pull requests from a QA perspective, posts findings on both the PR and the linked QA issue. Use when asked to review a PR, do a QA review, analyze a pull request, check code changes, or complete a QA review task from an issue."
 tools:
-  - io.github.git/*
   - github-pull-request_activePullRequest
   - github-pull-request_openPullRequest
   - read
@@ -41,11 +40,9 @@ Analyze the diff from a **QA perspective** — not just code correctness, but us
 
 ## Step 3 — Post the PR Review
 
-Post a review on the PR. Try MCP tools first (`pull_request_review_write`). If unavailable, use `gh` CLI.
+**Use ONLY the `gh` CLI to post the review. Do NOT use MCP tools (`pull_request_review_write`) — they cause duplicate posts.**
 
-**CRITICAL — post exactly ONE review. Do NOT retry or post a second time if the first attempt fails.**
-
-Before posting, ALWAYS check authorship first. GitHub blocks `REQUEST_CHANGES` on your own PR:
+Before posting, check authorship. GitHub blocks `REQUEST_CHANGES` on your own PR:
 
 ```bash
 # 1. Write the review body to a temp file first (avoids shell escaping issues)
@@ -58,7 +55,7 @@ REVIEW_EOF
 PR_AUTHOR=$(gh pr view <number> --json author --jq '.author.login')
 GH_USER=$(gh api user --jq '.login')
 
-# 3. Post exactly ONCE — never retry with a different flag
+# 3. Post exactly ONCE using gh CLI only
 if [ "$PR_AUTHOR" = "$GH_USER" ]; then
   gh pr review <number> --comment --body-file /tmp/qa-review.md
 else
@@ -66,7 +63,7 @@ else
 fi
 ```
 
-**Never call `gh pr review` more than once. If it fails, do NOT retry with different flags.**
+**Post exactly ONE review. Never call `gh pr review` more than once. If it fails, do NOT retry.**
 
 ## Step 4 — Update the Linked QA Issue
 
@@ -77,7 +74,7 @@ gh issue list --search "Review PR" --json number,title,body --limit 20
 
 Look for an issue whose body contains the PR number or URL. When found:
 
-**Post exactly ONE comment on the issue and add the label in the same step. Do NOT post multiple comments.**
+**Use ONLY `gh` CLI to post the comment. Do NOT use MCP tools for writing. Post exactly ONE comment.**
 
 ```bash
 # 1. Write the issue comment to a temp file
@@ -130,4 +127,5 @@ After completing both the PR review and issue update, provide a summary:
 - ALWAYS review from a QA perspective, not a developer perspective
 - ALWAYS read the full diff before posting any comments
 - ALWAYS update both the PR AND the linked QA issue
-- ALWAYS use `gh` CLI if MCP tools are not available
+- ALWAYS use `gh` CLI for ALL write operations (reviews, comments, labels) — NEVER use MCP tools to post reviews or comments
+- Use MCP tools ONLY for reading PR data, not for writing
