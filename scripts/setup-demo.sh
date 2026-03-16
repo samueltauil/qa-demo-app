@@ -37,7 +37,8 @@ fi
 if [ -n "$ORG" ]; then
   REPO_FULL_NAME="$ORG/$REPO_NAME"
 else
-  REPO_FULL_NAME="$REPO_NAME"
+  GH_USER=$(gh api user --jq '.login')
+  REPO_FULL_NAME="$GH_USER/$REPO_NAME"
 fi
 
 echo ""
