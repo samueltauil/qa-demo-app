@@ -307,7 +307,7 @@ ISSUE_URLS=$(gh issue list --repo "$REPO_FULL_NAME" --state all --json url --jq 
 # Create the GitHub Project (v2)
 echo "  Creating GitHub Project board..."
 PROJECT_JSON=$(gh project create --owner "$PROJECT_OWNER" --title "QA Sprint Board — Alex's Tuesday" --format json 2>&1) || true
-PROJECT_NUMBER=$(echo "$PROJECT_JSON" | jq -r '.number // empty' 2>/dev/null)
+PROJECT_NUMBER=$(echo "$PROJECT_JSON" | node -e "let d='';process.stdin.on('data',c=>d+=c);process.stdin.on('end',()=>{try{const j=JSON.parse(d);process.stdout.write(String(j.number||''))}catch(e){}})" 2>/dev/null)
 
 if [ -z "$PROJECT_NUMBER" ]; then
   echo "  ⚠️  Could not create project automatically. Create it manually at github.com"
@@ -331,19 +331,26 @@ else
   echo "  Setting board column statuses..."
   FIELDS_JSON=$(gh project field-list "$PROJECT_NUMBER" --owner "$PROJECT_OWNER" --format json 2>/dev/null) || true
   if [ -n "$FIELDS_JSON" ]; then
-    STATUS_FIELD_ID=$(echo "$FIELDS_JSON" | jq -r '.fields[] | select(.name == "Status") | .id // empty')
-    TODO_OPTION=$(echo "$FIELDS_JSON" | jq -r '.fields[] | select(.name == "Status") | .options[] | select(.name | test("Todo|To Do|to do")) | .id // empty')
-    IN_PROGRESS_OPTION=$(echo "$FIELDS_JSON" | jq -r '.fields[] | select(.name == "Status") | .options[] | select(.name | test("In Progress|in progress")) | .id // empty')
+    STATUS_FIELD_ID=$(echo "$FIELDS_JSON" | node -e "let d='';process.stdin.on('data',c=>d+=c);process.stdin.on('end',()=>{try{const j=JSON.parse(d);const f=j.fields.find(f=>f.name==='Status');process.stdout.write(f?f.id:'')}catch(e){}})" 2>/dev/null)
+    TODO_OPTION=$(echo "$FIELDS_JSON" | node -e "let d='';process.stdin.on('data',c=>d+=c);process.stdin.on('end',()=>{try{const j=JSON.parse(d);const f=j.fields.find(f=>f.name==='Status');const o=f&&f.options.find(o=>/todo|to do/i.test(o.name));process.stdout.write(o?o.id:'')}catch(e){}})" 2>/dev/null)
+    IN_PROGRESS_OPTION=$(echo "$FIELDS_JSON" | node -e "let d='';process.stdin.on('data',c=>d+=c);process.stdin.on('end',()=>{try{const j=JSON.parse(d);const f=j.fields.find(f=>f.name==='Status');const o=f&&f.options.find(o=>/in progress/i.test(o.name));process.stdout.write(o?o.id:'')}catch(e){}})" 2>/dev/null)
 
     if [ -n "$STATUS_FIELD_ID" ]; then
-      PROJECT_ID=$(gh project view "$PROJECT_NUMBER" --owner "$PROJECT_OWNER" --format json 2>/dev/null | jq -r '.id // empty')
+      PROJECT_ID=$(gh project view "$PROJECT_NUMBER" --owner "$PROJECT_OWNER" --format json 2>/dev/null | node -e "let d='';process.stdin.on('data',c=>d+=c);process.stdin.on('end',()=>{try{const j=JSON.parse(d);process.stdout.write(j.id||'')}catch(e){}})" 2>/dev/null)
 
       if [ -n "$PROJECT_ID" ]; then
         ITEMS_JSON=$(gh project item-list "$PROJECT_NUMBER" --owner "$PROJECT_OWNER" --format json 2>/dev/null) || true
         if [ -n "$ITEMS_JSON" ]; then
-          echo "$ITEMS_JSON" | jq -c '.items[]' 2>/dev/null | while read -r item; do
-            TITLE=$(echo "$item" | jq -r '.content.title // empty')
-            ITEM_ID=$(echo "$item" | jq -r '.id // empty')
+          echo "$ITEMS_JSON" | node -e "
+let d='';process.stdin.on('data',c=>d+=c);process.stdin.on('end',()=>{
+  try{const j=JSON.parse(d);j.items.forEach(i=>{
+    const t=i.content&&i.content.title||'';
+    const id=i.id||'';
+    if(t&&id)console.log(JSON.stringify({title:t,id:id}));
+  })}catch(e){}
+});" 2>/dev/null | while read -r item_line; do
+            TITLE=$(echo "$item_line" | node -e "let d='';process.stdin.on('data',c=>d+=c);process.stdin.on('end',()=>{try{process.stdout.write(JSON.parse(d).title)}catch(e){}})" 2>/dev/null)
+            ITEM_ID=$(echo "$item_line" | node -e "let d='';process.stdin.on('data',c=>d+=c);process.stdin.on('end',()=>{try{process.stdout.write(JSON.parse(d).id)}catch(e){}})" 2>/dev/null)
 
             # Issue 1 (test coverage) & Issue 6 (security test) → Todo
             if [ -n "$TODO_OPTION" ] && echo "$TITLE" | grep -qE "test coverage|security regression"; then
