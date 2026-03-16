@@ -7,6 +7,7 @@ const { getDb } = require('../src/database');
 describe('User Registration API', () => {
   beforeEach(() => {
     const db = getDb();
+    db.exec('DELETE FROM payments');
     db.exec('DELETE FROM users');
   });
 

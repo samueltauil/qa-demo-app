@@ -14,7 +14,7 @@
 - [ ] Open browser to http://localhost:3000 and verify pages work
 - [ ] Open a second browser tab to github.com/{your-repo}/security
 - [ ] Have this file and `copilot-prompts.md` open in a side editor for easy copy-paste
-- [ ] Run `npm test` once to verify existing tests pass (should be 5-6 passing)
+- [ ] Run `npm test` once to verify existing tests pass (should be 12 passing, 3 suites)
 
 
 ---

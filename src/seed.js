@@ -23,10 +23,41 @@ fs.writeFileSync(path.join(uploadsDir, 'test-results.csv'), 'test,status\nlogin,
 const { getDb } = require('./database');
 const db = getDb();
 
-// Clear existing data
-db.exec('DELETE FROM payments');
-db.exec('DELETE FROM users');
-db.exec('DELETE FROM products');
+// Drop and recreate tables so IDs always start at 1
+db.exec('DROP TABLE IF EXISTS payments');
+db.exec('DROP TABLE IF EXISTS users');
+db.exec('DROP TABLE IF EXISTS products');
+db.exec(`
+  CREATE TABLE IF NOT EXISTS users (
+    id INTEGER PRIMARY KEY AUTOINCREMENT,
+    email TEXT UNIQUE NOT NULL,
+    password_hash TEXT NOT NULL,
+    name TEXT NOT NULL,
+    bio TEXT DEFAULT '',
+    created_at DATETIME DEFAULT CURRENT_TIMESTAMP
+  )
+`);
+db.exec(`
+  CREATE TABLE IF NOT EXISTS payments (
+    id INTEGER PRIMARY KEY AUTOINCREMENT,
+    user_id INTEGER NOT NULL,
+    amount REAL NOT NULL,
+    currency TEXT DEFAULT 'USD',
+    status TEXT DEFAULT 'pending',
+    description TEXT,
+    created_at DATETIME DEFAULT CURRENT_TIMESTAMP,
+    FOREIGN KEY (user_id) REFERENCES users(id)
+  )
+`);
+db.exec(`
+  CREATE TABLE IF NOT EXISTS products (
+    id INTEGER PRIMARY KEY AUTOINCREMENT,
+    name TEXT NOT NULL,
+    description TEXT,
+    price REAL NOT NULL,
+    category TEXT
+  )
+`);
 
 // Seed users
 const passwordHash = bcrypt.hashSync('password123', 10);
@@ -40,8 +71,10 @@ const users = [
 
 const insertUser = db.prepare('INSERT INTO users (email, password_hash, name, bio) VALUES (?, ?, ?, ?)');
 
+const userIds = [];
 users.forEach(u => {
-  insertUser.run(u.email, passwordHash, u.name, `Hi, I'm ${u.name}. QA Engineer.`);
+  const result = insertUser.run(u.email, passwordHash, u.name, `Hi, I'm ${u.name}. QA Engineer.`);
+  userIds.push(Number(result.lastInsertRowid));
 });
 
 // Seed one user with a dangerous bio (for XSS demo)
@@ -71,10 +104,10 @@ products.forEach(p => {
 const insertPayment = db.prepare(
   'INSERT INTO payments (user_id, amount, currency, status, description) VALUES (?, ?, ?, ?, ?)'
 );
-insertPayment.run(1, 29.99, 'USD', 'completed', 'Widget Pro purchase');
-insertPayment.run(1, 14.99, 'USD', 'completed', 'DataSync Cable purchase');
-insertPayment.run(2, 199.99, 'USD', 'completed', 'TestRunner 3000 license');
-insertPayment.run(3, 49.99, 'USD', 'pending', 'CloudMonitor subscription');
+insertPayment.run(userIds[0], 29.99, 'USD', 'completed', 'Widget Pro purchase');
+insertPayment.run(userIds[0], 14.99, 'USD', 'completed', 'DataSync Cable purchase');
+insertPayment.run(userIds[1], 199.99, 'USD', 'completed', 'TestRunner 3000 license');
+insertPayment.run(userIds[2], 49.99, 'USD', 'pending', 'CloudMonitor subscription');
 
 console.log('✅ Database seeded successfully!');
 console.log(`   - ${users.length} users (password: password123)`);

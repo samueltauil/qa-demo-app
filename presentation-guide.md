@@ -20,27 +20,42 @@
 ## 🔧 Pre-Demo Setup (30 minutes before)
 
 ### If this is your first time ever:
-```bash
-cd demo-app
-./scripts/setup-demo.sh "qa-demo-app"
+
+**On Windows (PowerShell):**
+```powershell
+.\scripts\setup-demo.ps1 -RepoName "qa-demo-app"
 # Labels & issues are created automatically on first push
 # The project board is created by the setup script using your gh CLI auth
 # Wait ~5 minutes for CodeQL alerts, Dependabot alerts, and secret scanning to populate
 ```
 
+**On macOS/Linux (bash):**
+```bash
+./scripts/setup-demo.sh "qa-demo-app"
+```
+
 ### Before every presentation run:
+
+**On Windows (PowerShell):**
+```powershell
+.\scripts\reset-demo.ps1
+```
+
+**On macOS/Linux (bash):**
 ```bash
 ./scripts/reset-demo.sh
 ```
 
 ### Then verify:
+- [ ] `npm install` → install dependencies (required after first clone or Node.js update)
+- [ ] `npm run seed` → seed the database with sample data
 - [ ] `npm start` → verify http://localhost:3000 loads in browser
 - [ ] Open VS Code with the `demo-app` folder
 - [ ] Open **Copilot Chat** panel in VS Code (Ctrl+Shift+I)
 - [ ] Open browser tab 1: http://localhost:3000 → click through pages to verify
 - [ ] Open browser tab 2: `github.com/{your-repo}/security` (Security overview)
 - [ ] Open browser tab 3: `github.com/{your-repo}/projects` → open "QA Sprint Board — Alex's Tuesday"
-- [ ] Run `npm test` → verify 5-6 tests pass
+- [ ] Run `npm test` → verify 12 tests pass (3 suites)
 - [ ] Keep **this guide** open on your second screen
 - [ ] Have a timer visible
 
@@ -458,7 +473,7 @@ const payloads = [
 ```
 demo-assets/search-fixed.js
 ```
-> Show the fix at lines 16-19 — the parameterized query:
+> Show the fix at lines 27-29 — the parameterized query:
 > ```javascript
 > const sql = "SELECT * FROM products WHERE name LIKE ? OR description LIKE ?";
 > const param = `%${query}%`;
