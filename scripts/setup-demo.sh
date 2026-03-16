@@ -25,6 +25,16 @@ ORG="${2:-}"
 
 cd "$(dirname "$0")/.."
 
+# ── Pre-flight: ensure git identity is configured ─────────────
+if [ -z "$(git config user.name)" ] || [ -z "$(git config user.email)" ]; then
+  echo ""
+  echo "ERROR: Git identity not configured."
+  echo "Run these commands first:"
+  echo "  git config --global user.email \"you@example.com\""
+  echo "  git config --global user.name \"Your Name\""
+  exit 1
+fi
+
 if [ -n "$ORG" ]; then
   REPO_FULL_NAME="$ORG/$REPO_NAME"
 else
