@@ -43,14 +43,22 @@ Analyze the diff from a **QA perspective** — not just code correctness, but us
 
 Post a review on the PR. Try MCP tools first (`pull_request_review_write`). If unavailable, use `gh` CLI.
 
-**Important**: GitHub does not allow `REQUEST_CHANGES` on your own PR. If the authenticated user is the PR author, use `--comment` instead:
+**CRITICAL — post exactly ONE review. Do NOT retry or post a second time if the first attempt fails.**
+
+Before posting, ALWAYS check authorship first. GitHub blocks `REQUEST_CHANGES` on your own PR:
 
 ```bash
-# Check if you're the PR author
+# 1. Write the review body to a temp file first (avoids shell escaping issues)
+cat > /tmp/qa-review.md <<'REVIEW_EOF'
+## QA Review
+... your review content here ...
+REVIEW_EOF
+
+# 2. Check authorship BEFORE posting
 PR_AUTHOR=$(gh pr view <number> --json author --jq '.author.login')
 GH_USER=$(gh api user --jq '.login')
 
-# Use --comment if you're the author, --request-changes otherwise
+# 3. Post exactly ONCE — never retry with a different flag
 if [ "$PR_AUTHOR" = "$GH_USER" ]; then
   gh pr review <number> --comment --body-file /tmp/qa-review.md
 else
@@ -58,7 +66,7 @@ else
 fi
 ```
 
-**Always write the review body to a temp file** (`--body-file`) to avoid shell escaping issues with special characters.
+**Never call `gh pr review` more than once. If it fails, do NOT retry with different flags.**
 
 ## Step 4 — Update the Linked QA Issue
 
@@ -69,9 +77,12 @@ gh issue list --search "Review PR" --json number,title,body --limit 20
 
 Look for an issue whose body contains the PR number or URL. When found:
 
-1. **Post a QA summary comment** on the issue with your findings:
+**Post exactly ONE comment on the issue and add the label in the same step. Do NOT post multiple comments.**
+
 ```bash
-gh issue comment <issue-number> --body "## QA Review Complete
+# 1. Write the issue comment to a temp file
+cat > /tmp/qa-issue-comment.md <<'ISSUE_EOF'
+## QA Review Complete
 
 **PR**: #<pr-number>
 **Reviewed by**: Copilot QA Agent
@@ -83,20 +94,22 @@ gh issue comment <issue-number> --body "## QA Review Complete
 
 ### Checklist Status
 - [x] Check for race conditions — found TOCTOU issue
-- [x] Verify zero-amount behavior — no guard for \$0
+- [x] Verify zero-amount behavior — no guard for $0
 - [x] Verify expired codes rejected — string comparison bug
 - [ ] Regression tests — not yet written
 
 ### Recommended Next Steps
 1. Developer addresses review comments
 2. QA writes regression tests (see test checklist on PR)
-3. Re-review after fixes"
-```
+3. Re-review after fixes
+ISSUE_EOF
 
-2. **Add a label** to indicate review status:
-```bash
+# 2. Post comment AND add label in one step
+gh issue comment <issue-number> --body-file /tmp/qa-issue-comment.md
 gh issue edit <issue-number> --add-label "reviewed"
 ```
+
+**Never call `gh issue comment` more than once per issue.**
 
 ## Output Format
 
