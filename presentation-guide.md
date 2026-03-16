@@ -239,7 +239,7 @@ Review the payment discount PR and update the linked QA issue with your findings
 **③ Watch the agent work** — it will:
 1. Read the PR diff (payment processing changes)
 2. Analyze from a QA perspective — regression risk, edge cases, security
-3. Post a code review on the PR with `REQUEST_CHANGES`
+3. Post a QA code review on the PR via `gh` CLI
 4. Find the linked QA issue ("Review PR: Discount code support")
 5. Post a QA summary comment on the issue with findings and checklist status
 6. Add the `reviewed` label to the issue
@@ -262,7 +262,7 @@ Review the payment discount PR and update the linked QA issue with your findings
 > - **Custom agents** — encode your QA review process as a reusable agent
 > - **PR reviews** — Copilot analyzes diffs for bugs, edge cases, security issues
 > - **Issue updates** — the agent closes the loop by updating the QA task with findings
-> - **`gh` CLI fallback** — works in Codespaces, local VS Code, or any terminal
+> - **`gh` CLI integration** — uses `gh` CLI for all write operations, works in Codespaces, local VS Code, or any terminal
 > - **Copilot in GitHub.com** — can also assign `@copilot` as a PR reviewer directly from the PR page
 
 **🗣️ Say:** *"The QA team gets a full audit trail — from issue to review to findings — all automated. Instead of context-switching between the issue, the PR, and a spreadsheet, everything stays connected."*
